@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
       return -1;
   }
 
-  t = tm1638_alloc(17, 21, 22);
+  t = tm1638_alloc(0, 2, 3);
   if (!t)
     {
       printf("Unable to allocate TM1638\n");

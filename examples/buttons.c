@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
       return -1;
   }
 
-  t = tm1638_alloc(17, 21, 22);
+  t = tm1638_alloc(0, 2, 3);
   if (!t)
     {
       printf("Unable to allocate TM1638\n");
@@ -65,7 +65,8 @@ int main(int argc, char *argv[])
   while(1)
     {
       uint8_t  x = tm1638_read_8buttons(t);
-      tm1638_set_8leds(t, 0, x);
+	  printf("%d\n", x);
+      tm1638_set_8leds(t, x);
 
       delay(10);
     }

@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
       return -1;
   }
 
-  t = tm1638_alloc(17, 21, 22);
+  t = tm1638_alloc(0, 2, 3);
   if (!t)
     {
       printf("Unable to allocate TM1638\n");
@@ -93,7 +93,7 @@ static void knight_rider(tm1638_p t, int n)
       for(int j = 0; j < 8; j++)
 	{
 	  uint8_t m = 128 >> j;
-	  tm1638_set_8leds(t, m, 0);
+	  tm1638_set_8leds(t, m);
 	  tm1638_set_7seg_text(t, "", m);
 	  delay(25);
 	}
@@ -101,7 +101,7 @@ static void knight_rider(tm1638_p t, int n)
       for(int j = 0; j < 8; j++)
 	{
 	  uint8_t m = 1 << j;
-	  tm1638_set_8leds(t, m, 0);
+	  tm1638_set_8leds(t, m);
 	  tm1638_set_7seg_text(t, "", m);
 	  delay(25);
 	}
@@ -110,13 +110,13 @@ static void knight_rider(tm1638_p t, int n)
 
 static void flashy(tm1638_p t)
 {
-  uint8_t green = 0;
+  uint8_t red = 0;
 
   for(int i = 0; i < 8; i++)
     {
       uint8_t mask = (128 >> i);
 
-      tm1638_set_8leds(t, mask, green);
+      tm1638_set_8leds(t, mask);
       
       for(int j = 0; j < 8; j++)
 	{
@@ -124,9 +124,10 @@ static void flashy(tm1638_p t)
 	  delay(50);
 	}
       
-      green |= mask;
-      tm1638_set_8leds(t, 0, green);
+      red |= mask;
+      tm1638_set_8leds(t, red);
     }
 }
+
 
 /** @endcond */

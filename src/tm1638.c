@@ -325,10 +325,10 @@ void tm1638_set_led(const tm1638_p t, uint8_t led, uint8_t cols)
 }
 
 /* See tm1638.h */
-void tm1638_set_8leds(const tm1638_p t, uint8_t red, uint8_t green)
+void tm1638_set_8leds(const tm1638_p t, uint8_t red)
 {
   for(int i = 0, j = 128; i < 8; i++, j >>= 1)
-    tm1638_set_led(t, i, ((red & j) ? 1 : 0) + ((green & j) ? 2 : 0));
+    tm1638_set_led(t, i, (red & j) ? 1 : 0);
 }
 
 /* See tm1638.h */

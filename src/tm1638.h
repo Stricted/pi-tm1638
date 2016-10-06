@@ -178,12 +178,11 @@ void tm1638_set_led(const tm1638_p t, uint8_t led, uint8_t cols);
  *
  * @param t       Pointer to the tm1638 of interest.
  * @param red     A byte's worth of red data (MSB is leftmost).
- * @param green   A byte's worth of green data (MSB is leftmost).
  *
  * The ordering might seem odd, but makes the display a sensible
  * binary rendition of red & green.
  */
-void tm1638_set_8leds(const tm1638_p t, uint8_t red, uint8_t green);
+void tm1638_set_8leds(const tm1638_p t, uint8_t red);
 
 /**
  *
