@@ -1,13 +1,13 @@
 /**
  *
  * @file 
- * @brief   A simple interface to TM1638 based displays for the Raspberry Pi.
+ * @brief   A simple interface to TM1638 based displays for the Banana Pi.
  * @author  Martin Oldfield <ex-tm1638@mjo.tc>
  * @version 0.1
  *
  * @section DESCRIPTION
  *
- * A simple interface to the TM1638 based displays for the Raspberry Pi.
+ * A simple interface to the TM1638 based displays for the Banana Pi.
  *
  * Dealextreme, doubtless amongst others, sell small boards with eight
  * seven-segment displays, eight red-green LEDs and eight push buttons
@@ -17,7 +17,7 @@
  * driver chip. This sits on a two-wire serial bus which makes it
  * fairly easy to connect the boards to a computer/microcontroller of
  * your choice. Of course, one needs a little bit of software. This is
- * such a library for the Raspberry Pi.
+ * such a library for the Banana Pi.
  *
  * @section EXAMPLE
  *
