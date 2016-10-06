@@ -44,35 +44,32 @@
 
 #include "tm1638.h"
 
-int main(int argc, char *argv[])
-{
-  tm1638_p t;
+int main(int argc, char *argv[]) {
+	tm1638_p t;
 
-  if (wiringPiSetup() == -1) {
-      printf("Unable to initialize wiringPi library\n");
-      return -1;
-  }
-  
-  t = tm1638_alloc(8, 9, 7);
-  if (!t)
-    {
-      printf("Unable to allocate TM1638\n");
-      return -2;
-    }
+	if (wiringPiSetup() == -1) {
+		printf("Unable to initialize wiringPi library\n");
+		return -1;
+	}
 
-  tm1638_set_7seg_text(t, "Buttons!", 0x00);
-  
-  while(1)
-    {
-      uint8_t  x = tm1638_read_8buttons(t);
-      tm1638_set_8leds(t, x);
+	t = tm1638_alloc(8, 9, 7);
+	if (!t) {
+		printf("Unable to allocate TM1638\n");
+		return -2;
+	}
 
-      delay(10);
-    }
+	tm1638_set_7seg_text(t, "Buttons!", 0x00);
 
-  tm1638_free(&t);
+	while(1) {
+		uint8_t  x = tm1638_read_8buttons(t);
+		tm1638_set_8leds(t, x);
 
-  return 0;
+		delay(10);
+	}
+
+	tm1638_free(&t);
+
+	return 0;
 }
 
 /** @endcond */

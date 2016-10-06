@@ -46,87 +46,78 @@
 static void knight_rider(tm1638_p t, int n);
 static void flashy(tm1638_p t);
 
-int main(int argc, char *argv[])
-{
-  tm1638_p t;
+int main(int argc, char *argv[]) {
+	tm1638_p t;
 
-  if (wiringPiSetup() == -1) {
-      printf("Unable to initialize wiringPi library\n");
-      return -1;
-  }
+	if (wiringPiSetup() == -1) {
+		printf("Unable to initialize wiringPi library\n");
+		return -1;
+	}
 
-  t = tm1638_alloc(8, 9, 7);
-  if (!t)
-    {
-      printf("Unable to allocate TM1638\n");
-      return -2;
-    }
+	t = tm1638_alloc(8, 9, 7);
+	if (!t) {
+		printf("Unable to allocate TM1638\n");
+		return -2;
+	}
 
-  tm1638_set_7seg_text(t, "Hello !", 0x00);
-  delay(5000);
+	tm1638_set_7seg_text(t, "Hello !", 0x00);
+	delay(5000);
 
-  tm1638_send_cls(t);
+	tm1638_send_cls(t);
 
-  knight_rider(t,2);
+	knight_rider(t,2);
 
-  tm1638_send_cls(t);
+	tm1638_send_cls(t);
 
-  flashy(t);
+	flashy(t);
 
-  tm1638_send_cls(t);
+	tm1638_send_cls(t);
 
-  knight_rider(t,2);
+	knight_rider(t,2);
 
-  tm1638_send_cls(t);
+	tm1638_send_cls(t);
 
-  tm1638_set_7seg_text(t, "Goodbye!", 0x00);
+	tm1638_set_7seg_text(t, "Goodbye!", 0x00);
 
-  tm1638_free(&t);
+	tm1638_free(&t);
 
-  return 0;
+	return 0;
 }
 
-static void knight_rider(tm1638_p t, int n)
-{
-  for(int i = 0; i < n; i++)
-    {
-      for(int j = 0; j < 8; j++)
-	{
-	  uint8_t m = 128 >> j;
-	  tm1638_set_8leds(t, m);
-	  tm1638_set_7seg_text(t, "", m);
-	  delay(25);
-	}
+static void knight_rider(tm1638_p t, int n) {
+	for(int i = 0; i < n; i++) 	{
+		for(int j = 0; j < 8; j++) {
+			uint8_t m = 128 >> j;
+			tm1638_set_8leds(t, m);
+			tm1638_set_7seg_text(t, "", m);
+			delay(25);
+		}
 
-      for(int j = 0; j < 8; j++)
-	{
-	  uint8_t m = 1 << j;
-	  tm1638_set_8leds(t, m);
-	  tm1638_set_7seg_text(t, "", m);
-	  delay(25);
+		for(int j = 0; j < 8; j++) {
+			uint8_t m = 1 << j;
+			tm1638_set_8leds(t, m);
+			tm1638_set_7seg_text(t, "", m);
+			delay(25);
+		}
 	}
-    }
 }
 
-static void flashy(tm1638_p t)
-{
-  uint8_t red = 0;
+static void flashy(tm1638_p t) {
+	uint8_t red = 0;
 
-  for(int i = 0; i < 8; i++)
-    {
-      uint8_t mask = (128 >> i);
+	for(int i = 0; i < 8; i++) {
+		uint8_t mask = (128 >> i);
 
-      tm1638_set_8leds(t, mask);
-      
-      for(int j = 0; j < 8; j++)
-	{
-	  tm1638_set_7seg_raw(t, i, (1 << j));
-	  delay(50);
+		tm1638_set_8leds(t, mask);
+
+		for(int j = 0; j < 8; j++) {
+			tm1638_set_7seg_raw(t, i, (1 << j));
+			delay(50);
+		}
+
+		red |= mask;
+		tm1638_set_8leds(t, red);
 	}
-      
-      red |= mask;
-      tm1638_set_8leds(t, red);
-    }
 }
 
 

@@ -43,35 +43,32 @@
 #include <wiringPi.h>
 #include <tm1638.h>
 
-int main(int argc, char *argv[])
-{
-  tm1638_p t;
+int main(int argc, char *argv[]) {
+	tm1638_p t;
 
-  if (wiringPiSetup() == -1) {
-      printf("Unable to initialize wiringPi library\n");
-      return -1;
-  }
+	if (wiringPiSetup() == -1) {
+		printf("Unable to initialize wiringPi library\n");
+		return -1;
+	}
 
-  t = tm1638_alloc(8, 9, 7);
-  if (!t)
-    {
-      printf("Unable to allocate TM1638\n");
-      return -2;
-    }
+	t = tm1638_alloc(8, 9, 7);
+	if (!t) {
+		printf("Unable to allocate TM1638\n");
+		return -2;
+	}
 
-  while(1)
-    {
-      time_t now    = time(NULL);
-      struct tm *tm = localtime(&now);
+	while(1) {
+		time_t now    = time(NULL);
+		struct tm *tm = localtime(&now);
 
-      char text[10];
-      snprintf(text, 9, "%02d %02d %02d", tm->tm_hour, tm->tm_min, tm->tm_sec);
+		char text[10];
+		snprintf(text, 9, "%02d %02d %02d", tm->tm_hour, tm->tm_min, tm->tm_sec);
 
-      tm1638_set_7seg_text(t, text, 0);
-      delay(100);
-    }
+		tm1638_set_7seg_text(t, text, 0);
+		delay(100);
+	}
 
-  tm1638_free(&t);
+	tm1638_free(&t);
 
-  return 0;
+	return 0;
 }

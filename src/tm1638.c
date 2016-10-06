@@ -84,12 +84,12 @@
  */
 struct tm1638_tag
 {
-  uint8_t data;       /**< The pin which is connected to the TM1638's data line */
-  uint8_t clock;      /**< The pin which is connected to the TM1638's clock line */
-  uint8_t strobe;     /**< The pin which is connected to the TM1638's strobe line */
+	uint8_t data;       /**< The pin which is connected to the TM1638's data line */
+	uint8_t clock;      /**< The pin which is connected to the TM1638's clock line */
+	uint8_t strobe;     /**< The pin which is connected to the TM1638's strobe line */
 
-  uint8_t intensity;  /**< The current LED brightness */
-  bool    enable;     /**< true iff we're enabled */
+	uint8_t intensity;  /**< The current LED brightness */
+	bool    enable;     /**< true iff we're enabled */
 };
 
 static void tm1638_send_raw(const tm1638_p t, uint8_t x);
@@ -100,61 +100,57 @@ static void tm1638_send_config(const tm1638_p t);
 static uint8_t tm1638_calc_config(const tm1638_p t);
 
 /* See tm1638.h */
-tm1638_p tm1638_alloc(uint8_t data, uint8_t clock, uint8_t strobe)
-{
-  /* The delays in this code are somewhat arbitrary: they work for me
-     but I make no claims that they are optimal or robust */
+tm1638_p tm1638_alloc(uint8_t data, uint8_t clock, uint8_t strobe) {
+	/* The delays in this code are somewhat arbitrary: they work for me
+	   but I make no claims that they are optimal or robust */
 
-  tm1638_p t = malloc(sizeof(tm1638));
-  if (!t)
-    return NULL;
+	tm1638_p t = malloc(sizeof(tm1638));
+	if (!t)
+		return NULL;
 
-  t->data   = data;
-  t->clock  = clock;
-  t->strobe = strobe;
-  
-  t->intensity = 7;
-  t->enable    = true;
+	t->data   = data;
+	t->clock  = clock;
+	t->strobe = strobe;
 
-  pinMode(t->data, OUTPUT);
-  pinMode(t->clock, OUTPUT);
-  pinMode(t->strobe, OUTPUT);
+	t->intensity = 7;
+	t->enable    = true;
 
-  digitalWrite(t->strobe, HIGH);
-  digitalWrite(t->clock,  HIGH);
-  delayMicroseconds(1);
-  
-  tm1638_send_config(t);
+	pinMode(t->data, OUTPUT);
+	pinMode(t->clock, OUTPUT);
+	pinMode(t->strobe, OUTPUT);
 
-  tm1638_send_cls(t);
+	digitalWrite(t->strobe, HIGH);
+	digitalWrite(t->clock,  HIGH);
+	delayMicroseconds(1);
 
-  return t;
+	tm1638_send_config(t);
+
+	tm1638_send_cls(t);
+
+	return t;
 }
 
 /* See tm1638.h */
-void tm1638_free(tm1638_p *t)
-{
-  free(*t);
-  *t = NULL;
+void tm1638_free(tm1638_p *t) {
+	free(*t);
+	*t = NULL;
 } 
 
 /* See tm1638.h */
-void tm1638_enable(tm1638_p t, bool enable)
-{
-  t->enable = enable;
-  tm1638_send_config(t);
+void tm1638_enable(tm1638_p t, bool enable) {
+	t->enable = enable;
+	tm1638_send_config(t);
 }
 
 /* See tm1638.h */
-void tm1638_set_intensity(tm1638_p t, uint8_t intensity)
-{
-  /* maximum intensity is 7 */
-  if (intensity > 7)
-    intensity = 7;
+void tm1638_set_intensity(tm1638_p t, uint8_t intensity) {
+	/* maximum intensity is 7 */
+	if (intensity > 7)
+		intensity = 7;
 
-  t->intensity = intensity;
+	t->intensity = intensity;
 
-  tm1638_send_config(t);
+	tm1638_send_config(t);
 }
 
 /**
@@ -163,9 +159,8 @@ void tm1638_set_intensity(tm1638_p t, uint8_t intensity)
  *
  * @param t  Pointer to the tm1638 of interest.
  */
-static void tm1638_send_config(const tm1638_p t)
-{
-  tm1638_send_command(t, tm1638_calc_config(t));
+static void tm1638_send_config(const tm1638_p t) {
+	tm1638_send_command(t, tm1638_calc_config(t));
 }
 
 /**
@@ -176,9 +171,8 @@ static void tm1638_send_config(const tm1638_p t)
  *
  * @return   The byte of config data we need to send.
  */
-static uint8_t tm1638_calc_config(const tm1638_p t)
-{
-  return 0x80 | (t->enable ? 8 : 0) | t->intensity;
+static uint8_t tm1638_calc_config(const tm1638_p t) {
+	return 0x80 | (t->enable ? 8 : 0) | t->intensity;
 }
 
 /**
@@ -188,22 +182,20 @@ static uint8_t tm1638_calc_config(const tm1638_p t)
  * @param t  Pointer to the tm1638 of interest.
  * @param x  The byte to send.
  */
-static void tm1638_send_raw(const tm1638_p t, uint8_t x)
-{
-  /* The delays in this code are somewhat arbitrary: they work for me
-     but I make no claims that they are optimal or robust */
-  for(int i = 0; i < 8; i++)
-    {
-      digitalWrite(t->clock, LOW);
-      delayMicroseconds(1);
+static void tm1638_send_raw(const tm1638_p t, uint8_t x) {
+	/* The delays in this code are somewhat arbitrary: they work for me
+	   but I make no claims that they are optimal or robust */
+	for(int i = 0; i < 8; i++) {
+		digitalWrite(t->clock, LOW);
+		delayMicroseconds(1);
 
-      digitalWrite(t->data, x & 1 ? HIGH : LOW);
-      delayMicroseconds(1);
+		digitalWrite(t->data, x & 1 ? HIGH : LOW);
+		delayMicroseconds(1);
 
-      x  >>= 1;
-      digitalWrite(t->clock, HIGH);
-      delayMicroseconds(1);
-    }
+		x  >>= 1;
+		digitalWrite(t->clock, HIGH);
+		delayMicroseconds(1);
+	}
 }
 
 /**
@@ -214,37 +206,36 @@ static void tm1638_send_raw(const tm1638_p t, uint8_t x)
  *
  * @return   The byte we read.
  */
-static uint8_t tm1638_receive_raw(const tm1638_p t)
-{
-  /* The delays in this code are somewhat arbitrary: they work for me
-     but I make no claims that they are optimal or robust */
+static uint8_t tm1638_receive_raw(const tm1638_p t) {
+	/* The delays in this code are somewhat arbitrary: they work for me
+	   but I make no claims that they are optimal or robust */
 
-  uint8_t x = 0;
+	uint8_t x = 0;
 
-  /* Turn GPIO pin into an input */
-  pinMode (t->data, INPUT);
-    
-  for(int i = 0; i < 8; i++)
-    {
-      x <<= 1;
+	/* Turn GPIO pin into an input */
+	pinMode(t->data, INPUT);
 
-      digitalWrite(t->clock, LOW);
-      delayMicroseconds(1);
+	for(int i = 0; i < 8; i++) {
+		x <<= 1;
 
-      uint8_t y = digitalRead(t->data);
+		digitalWrite(t->clock, LOW);
+		delayMicroseconds(1);
 
-      if (y & 1)
-	x |= 1;
-      delayMicroseconds(1);
+		uint8_t y = digitalRead(t->data);
 
-      digitalWrite(t->clock, HIGH);
-      delayMicroseconds(1);
-    }
+		if (y & 1)
+			x |= 1;
+		
+		delayMicroseconds(1);
 
-  /* Turn GPIO pin back into an output */
-  pinMode (t->data, OUTPUT);
+		digitalWrite(t->clock, HIGH);
+		delayMicroseconds(1);
+	}
 
-  return x;
+	/* Turn GPIO pin back into an output */
+	pinMode(t->data, OUTPUT);
+
+	return x;
 }
 
 /**
@@ -254,17 +245,16 @@ static uint8_t tm1638_receive_raw(const tm1638_p t)
  * @param t  Pointer to the tm1638 of interest.
  * @param x  The command to send.
  */
-static void tm1638_send_command(const tm1638_p t, uint8_t x)
-{
-  /* The delays in this code are somewhat arbitrary: they work for me
-     but I make no claims that they are optimal or robust */
-  digitalWrite(t->strobe, LOW);
-  delayMicroseconds(1);
+static void tm1638_send_command(const tm1638_p t, uint8_t x) {
+	/* The delays in this code are somewhat arbitrary: they work for me
+	   but I make no claims that they are optimal or robust */
+	digitalWrite(t->strobe, LOW);
+	delayMicroseconds(1);
 
-  tm1638_send_raw(t, x);
+	tm1638_send_raw(t, x);
 
-  digitalWrite(t->strobe, HIGH);
-  delayMicroseconds(1);
+	digitalWrite(t->strobe, HIGH);
+	delayMicroseconds(1);
 }
 
 /**
@@ -275,147 +265,134 @@ static void tm1638_send_command(const tm1638_p t, uint8_t x)
  * @param addr The address to write.
  * @param data The data to write.
  */
-static void tm1638_send_data(const tm1638_p t, uint8_t addr, uint8_t data)
-{
-  /* The delays in this code are somewhat arbitrary: they work for me
-     but I make no claims that they are optimal or robust */
-  tm1638_send_command(t, 0x44);
-  
-  digitalWrite(t->strobe, LOW);
-  delayMicroseconds(1);
+static void tm1638_send_data(const tm1638_p t, uint8_t addr, uint8_t data) {
+	/* The delays in this code are somewhat arbitrary: they work for me
+	   but I make no claims that they are optimal or robust */
+	tm1638_send_command(t, 0x44);
 
-  tm1638_send_raw(t, 0xc0 | addr);
-  tm1638_send_raw(t, data);
+	digitalWrite(t->strobe, LOW);
+	delayMicroseconds(1);
 
-  digitalWrite(t->strobe, HIGH);
-  delayMicroseconds(1);
+	tm1638_send_raw(t, 0xc0 | addr);
+	tm1638_send_raw(t, data);
+
+	digitalWrite(t->strobe, HIGH);
+	delayMicroseconds(1);
 }
     
 /* See tm1638.h */
-void tm1638_set_7seg_raw(const tm1638_p t, uint8_t digit, uint8_t n)
-{
-  tm1638_send_data(t, digit << 1, n);
+void tm1638_set_7seg_raw(const tm1638_p t, uint8_t digit, uint8_t n) {
+	tm1638_send_data(t, digit << 1, n);
 }
 
 /* See tm1638.h */
-void tm1638_set_7seg_text(const tm1638_p t, const char *str, uint8_t dots)
-{
-  const char *p = str;
+void tm1638_set_7seg_text(const tm1638_p t, const char *str, uint8_t dots) {
+	const char *p = str;
 
-  for(int i = 0, j = 1; i < 8; i++, j <<= 1)
-    {
-      // We want the loop to finish, but don't walk over the end of the string
-      char c = *p;
-      if (c)
-	p++;
-      
-      uint8_t f =  tm1638_font(c);
+	for(int i = 0, j = 1; i < 8; i++, j <<= 1) 	{
+		// We want the loop to finish, but don't walk over the end of the string
+		char c = *p;
+		if (c)
+			p++;
 
-      if (dots & j)
-	f |= 128;
+		uint8_t f =  tm1638_font(c);
 
-      tm1638_set_7seg_raw(t, i, f);
-    }
+		if (dots & j)
+			f |= 128;
+
+		tm1638_set_7seg_raw(t, i, f);
+	}
 }
 
 /* See tm1638.h */
-void tm1638_set_led(const tm1638_p t, uint8_t led, uint8_t cols)
-{
-  tm1638_send_data(t, (led << 1) + 1, cols);
+void tm1638_set_led(const tm1638_p t, uint8_t led, uint8_t cols) {
+	tm1638_send_data(t, (led << 1) + 1, cols);
 }
 
 /* See tm1638.h */
-void tm1638_set_8leds(const tm1638_p t, uint8_t red)
-{
-  for(int i = 0, j = 128; i < 8; i++, j >>= 1)
-    tm1638_set_led(t, i, (red & j) ? 1 : 0);
+void tm1638_set_8leds(const tm1638_p t, uint8_t red) {
+	for(int i = 0, j = 128; i < 8; i++, j >>= 1)
+		tm1638_set_led(t, i, (red & j) ? 1 : 0);
 }
 
 /* See tm1638.h */
-void tm1638_send_cls(const tm1638_p t)
-{
-  /* The delays in this code are somewhat arbitrary: they work for me
-     but I make no claims that they are optimal or robust */
-  tm1638_send_command(t, 0x40);
+void tm1638_send_cls(const tm1638_p t) {
+	/* The delays in this code are somewhat arbitrary: they work for me
+	   but I make no claims that they are optimal or robust */
+	tm1638_send_command(t, 0x40);
 
-  digitalWrite(t->strobe, LOW);
-  delayMicroseconds(1);
-  
-  tm1638_send_raw(t, 0xc0);
-  for(int i = 0; i < 16; i++)
-    tm1638_send_raw(t, 0x00);
+	digitalWrite(t->strobe, LOW);
+	delayMicroseconds(1);
 
-  digitalWrite(t->strobe, HIGH);
-  delayMicroseconds(1); 
+	tm1638_send_raw(t, 0xc0);
+	for(int i = 0; i < 16; i++)
+		tm1638_send_raw(t, 0x00);
+
+	digitalWrite(t->strobe, HIGH);
+	delayMicroseconds(1); 
 }
 
 /* See tm1638.h */
-uint8_t tm1638_font(char c)
-{
-  const uint8_t f[] = {
-    0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
-    0x00, 0x86, 0x22, 0x7e,  0x6d, 0x00, 0x00, 0x02,
-    0x30, 0x06, 0x63, 0x00,  0x04, 0x40, 0x80, 0x52,
-    0x3f, 0x06, 0x5b, 0x4f,  0x66, 0x6d, 0x7d, 0x27,
-    0x7f, 0x6f, 0x00, 0x00,  0x00, 0x48, 0x00, 0x53,
-    0x5f, 0x77, 0x7f, 0x39,  0x3f, 0x79, 0x71, 0x3d,
-    0x76, 0x06, 0x1f, 0x69,  0x38, 0x15, 0x37, 0x3f,
-    0x73, 0x67, 0x31, 0x6d,  0x78, 0x3e, 0x2a, 0x1d,
-    0x76, 0x6e, 0x5b, 0x39,  0x64, 0x0f, 0x00, 0x08,
-    0x20, 0x5f, 0x7c, 0x58,  0x5e, 0x7b, 0x31, 0x6f,
-    0x74, 0x04, 0x0e, 0x75,  0x30, 0x55, 0x54, 0x5c,
-    0x73, 0x67, 0x50, 0x6d,  0x78, 0x1c, 0x2a, 0x1d,
-    0x76, 0x6e, 0x47, 0x46,  0x06, 0x70, 0x01, 0x00
-  };
+uint8_t tm1638_font(char c) {
+	const uint8_t f[] = {
+		0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+		0x00, 0x86, 0x22, 0x7e,  0x6d, 0x00, 0x00, 0x02,
+		0x30, 0x06, 0x63, 0x00,  0x04, 0x40, 0x80, 0x52,
+		0x3f, 0x06, 0x5b, 0x4f,  0x66, 0x6d, 0x7d, 0x27,
+		0x7f, 0x6f, 0x00, 0x00,  0x00, 0x48, 0x00, 0x53,
+		0x5f, 0x77, 0x7f, 0x39,  0x3f, 0x79, 0x71, 0x3d,
+		0x76, 0x06, 0x1f, 0x69,  0x38, 0x15, 0x37, 0x3f,
+		0x73, 0x67, 0x31, 0x6d,  0x78, 0x3e, 0x2a, 0x1d,
+		0x76, 0x6e, 0x5b, 0x39,  0x64, 0x0f, 0x00, 0x08,
+		0x20, 0x5f, 0x7c, 0x58,  0x5e, 0x7b, 0x31, 0x6f,
+		0x74, 0x04, 0x0e, 0x75,  0x30, 0x55, 0x54, 0x5c,
+		0x73, 0x67, 0x50, 0x6d,  0x78, 0x1c, 0x2a, 0x1d,
+		0x76, 0x6e, 0x47, 0x46,  0x06, 0x70, 0x01, 0x00
+	};
 
-  return (c > 127) ? 0 : f[(unsigned char)c];
+	return (c > 127) ? 0 : f[(unsigned char)c];
 }
 
 /* See tm1638.h */
-uint32_t tm1638_read_buttons(const tm1638_p t)
-{
-  /* The delays in this code are somewhat arbitrary: they work for me
-     but I make no claims that they are optimal or robust */
-  digitalWrite(t->strobe, LOW);
-  delayMicroseconds(1);
+uint32_t tm1638_read_buttons(const tm1638_p t){
+	/* The delays in this code are somewhat arbitrary: they work for me
+	   but I make no claims that they are optimal or robust */
+	digitalWrite(t->strobe, LOW);
+	delayMicroseconds(1);
 
-  tm1638_send_raw(t, 0x42);
-  
-  uint32_t x = 0;
-  for(int i = 0; i < 4; i++)
-    {
-      x <<= 8;
-      x |= tm1638_receive_raw(t);
-    }
+	tm1638_send_raw(t, 0x42);
 
-  digitalWrite(t->strobe, HIGH);
-  delayMicroseconds(1);
+	uint32_t x = 0;
+	for(int i = 0; i < 4; i++) {
+		x <<= 8;
+		x |= tm1638_receive_raw(t);
+	}
 
-  return x;
+	digitalWrite(t->strobe, HIGH);
+	delayMicroseconds(1);
+
+	return x;
 }
 
 /* See tm1638.h */
-uint8_t tm1638_read_8buttons(const tm1638_p t)
-{
-  uint32_t x = tm1638_read_buttons(t);
-  uint8_t  y = 0;
-  
-  for(int i = 0; i < 4; i++)
-    {
-      y <<= 1;
+uint8_t tm1638_read_8buttons(const tm1638_p t) {
+	uint32_t x = tm1638_read_buttons(t);
+	uint8_t  y = 0;
 
-      if (x & 0x80000000)
-	y |= 0x10;
+	for(int i = 0; i < 4; i++) {
+		y <<= 1;
 
-      if (x & 0x08000000)
-	y |= 0x01;
+		if (x & 0x80000000)
+			y |= 0x10;
 
-      x <<= 8;
-    }
+		if (x & 0x08000000)
+			y |= 0x01;
 
-  return y;
+		x <<= 8;
+	}
+
+	return y;
 }
-  

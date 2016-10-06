@@ -26,20 +26,21 @@
  *     
  *     ...
  *     
- *     if (wiringPiSetup() == -1)
- *       { ... }
+ *     if (wiringPiSetup() == -1) {
+ *     ...
+ *     }
  *     
  *     tm1638_p t = tm1638_alloc(8, 9, 7);
- *     if (!t)
- *       { ... }
+ *     if (!t) { 
+ *     ...
+ *     }
  *     
  *     tm1638_set_7seg_text(t, "Hello!", 0xc0);
  *
- *     while(...)
- *       {
+ *     while(...) {
  *         uint8_t  x = tm1638_read_8buttons(t);
  *         tm1638_set_8leds(t, x);
- *       }
+ *     }
  *     
  *     tm1638_free(&t);
  *
@@ -122,7 +123,7 @@ tm1638_p tm1638_alloc(uint8_t data, uint8_t clock, uint8_t strobe);
  *
  * @param t      Pointer to tm1638 pointer, set to NULL when freed.
  */
-void     tm1638_free(tm1638_p *t);
+void tm1638_free(tm1638_p *t);
 
 /**
  *
@@ -223,6 +224,6 @@ uint32_t tm1638_read_buttons(const tm1638_p t);
  *
  * @return        8-bit uint of button states. MSB is leftmost.
  */
-uint8_t  tm1638_read_8buttons(const tm1638_p t);
+uint8_t tm1638_read_8buttons(const tm1638_p t);
 
 #endif
