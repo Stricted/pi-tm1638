@@ -16,7 +16,7 @@ var tm1638_8c =
     [ "tm1638_send_raw", "tm1638_8c.html#a385ffeeb1e1491cb534c46d788d077e3", null ],
     [ "tm1638_set_7seg_raw", "tm1638_8c.html#aa29b656c907c9ca296455e5daf477b35", null ],
     [ "tm1638_set_7seg_text", "tm1638_8c.html#af5e58bdfba2c28a60b98db2f96176b06", null ],
-    [ "tm1638_set_8leds", "tm1638_8c.html#aaecd92eda828e55638a8d5b7de5a3f6b", null ],
+    [ "tm1638_set_8leds", "tm1638_8c.html#ae56c6035073b8ab3ce1f7285a0d0dd77", null ],
     [ "tm1638_set_intensity", "tm1638_8c.html#a23c29fb92eee649738b4122b1b106426", null ],
     [ "tm1638_set_led", "tm1638_8c.html#a55513e09c80825ffd2548f228e70c6c9", null ]
 ];
