@@ -72,7 +72,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include <bcm2835.h>
+#include <wiringPi.h>
 
 #include "tm1638.h"
 
@@ -116,12 +116,12 @@ tm1638_p tm1638_alloc(uint8_t data, uint8_t clock, uint8_t strobe)
   t->intensity = 7;
   t->enable    = true;
 
-  bcm2835_gpio_fsel(t->data, BCM2835_GPIO_FSEL_OUTP);
-  bcm2835_gpio_fsel(t->clock,    BCM2835_GPIO_FSEL_OUTP);
-  bcm2835_gpio_fsel(t->strobe,   BCM2835_GPIO_FSEL_OUTP);
+  pinMode(t->data, OUTPUT);
+  pinMode(t->clock, OUTPUT);
+  pinMode(t->strobe, OUTPUT);
 
-  bcm2835_gpio_write(t->strobe, HIGH);
-  bcm2835_gpio_write(t->clock,  HIGH);
+  digitalWrite(t->strobe, HIGH);
+  digitalWrite(t->clock,  HIGH);
   delayMicroseconds(1);
   
   tm1638_send_config(t);
@@ -194,14 +194,14 @@ static void tm1638_send_raw(const tm1638_p t, uint8_t x)
      but I make no claims that they are optimal or robust */
   for(int i = 0; i < 8; i++)
     {
-      bcm2835_gpio_write(t->clock, LOW);
+      digitalWrite(t->clock, LOW);
       delayMicroseconds(1);
 
-      bcm2835_gpio_write(t->data, x & 1 ? HIGH : LOW);
+      digitalWrite(t->data, x & 1 ? HIGH : LOW);
       delayMicroseconds(1);
 
       x  >>= 1;
-      bcm2835_gpio_write(t->clock, HIGH);
+      digitalWrite(t->clock, HIGH);
       delayMicroseconds(1);
     }
 }
@@ -222,27 +222,27 @@ static uint8_t tm1638_receive_raw(const tm1638_p t)
   uint8_t x = 0;
 
   /* Turn GPIO pin into an input */
-  bcm2835_gpio_fsel(t->data, BCM2835_GPIO_FSEL_INPT);
+  pinMode (t->data, INPUT);
     
   for(int i = 0; i < 8; i++)
     {
       x <<= 1;
 
-      bcm2835_gpio_write(t->clock, LOW);
+      digitalWrite(t->clock, LOW);
       delayMicroseconds(1);
 
-      uint8_t y = bcm2835_gpio_lev(t->data);
+      uint8_t y = digitalRead(t->data);
 
       if (y & 1)
 	x |= 1;
       delayMicroseconds(1);
 
-      bcm2835_gpio_write(t->clock, HIGH);
+      digitalWrite(t->clock, HIGH);
       delayMicroseconds(1);
     }
 
   /* Turn GPIO pin back into an output */
-  bcm2835_gpio_fsel(t->data, BCM2835_GPIO_FSEL_OUTP);
+  pinMode (t->data, OUTPUT);
 
   return x;
 }
@@ -258,12 +258,12 @@ static void tm1638_send_command(const tm1638_p t, uint8_t x)
 {
   /* The delays in this code are somewhat arbitrary: they work for me
      but I make no claims that they are optimal or robust */
-  bcm2835_gpio_write(t->strobe, LOW);
+  digitalWrite(t->strobe, LOW);
   delayMicroseconds(1);
 
   tm1638_send_raw(t, x);
 
-  bcm2835_gpio_write(t->strobe, HIGH);
+  digitalWrite(t->strobe, HIGH);
   delayMicroseconds(1);
 }
 
@@ -281,13 +281,13 @@ static void tm1638_send_data(const tm1638_p t, uint8_t addr, uint8_t data)
      but I make no claims that they are optimal or robust */
   tm1638_send_command(t, 0x44);
   
-  bcm2835_gpio_write(t->strobe, LOW);
+  digitalWrite(t->strobe, LOW);
   delayMicroseconds(1);
 
   tm1638_send_raw(t, 0xc0 | addr);
   tm1638_send_raw(t, data);
 
-  bcm2835_gpio_write(t->strobe, HIGH);
+  digitalWrite(t->strobe, HIGH);
   delayMicroseconds(1);
 }
     
@@ -338,14 +338,14 @@ void tm1638_send_cls(const tm1638_p t)
      but I make no claims that they are optimal or robust */
   tm1638_send_command(t, 0x40);
 
-  bcm2835_gpio_write(t->strobe, LOW);
+  digitalWrite(t->strobe, LOW);
   delayMicroseconds(1);
   
   tm1638_send_raw(t, 0xc0);
   for(int i = 0; i < 16; i++)
     tm1638_send_raw(t, 0x00);
 
-  bcm2835_gpio_write(t->strobe, HIGH);
+  digitalWrite(t->strobe, HIGH);
   delayMicroseconds(1); 
 }
 
@@ -379,7 +379,7 @@ uint32_t tm1638_read_buttons(const tm1638_p t)
 {
   /* The delays in this code are somewhat arbitrary: they work for me
      but I make no claims that they are optimal or robust */
-  bcm2835_gpio_write(t->strobe, LOW);
+  digitalWrite(t->strobe, LOW);
   delayMicroseconds(1);
 
   tm1638_send_raw(t, 0x42);
@@ -391,7 +391,7 @@ uint32_t tm1638_read_buttons(const tm1638_p t)
       x |= tm1638_receive_raw(t);
     }
 
-  bcm2835_gpio_write(t->strobe, HIGH);
+  digitalWrite(t->strobe, HIGH);
   delayMicroseconds(1);
 
   return x;

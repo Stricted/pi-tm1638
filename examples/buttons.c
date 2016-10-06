@@ -40,7 +40,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include <bcm2835.h>
+#include <wiringPi.h>
 
 #include "tm1638.h"
 
@@ -48,11 +48,10 @@ int main(int argc, char *argv[])
 {
   tm1638_p t;
 
-  if (!bcm2835_init())
-    {
-      printf("Unable to initialize BCM library\n");
+  if (wiringPiSetup() == -1) {
+      printf("Unable to initialize wiringPi library\n");
       return -1;
-    }
+  }
 
   t = tm1638_alloc(17, 21, 22);
   if (!t)
