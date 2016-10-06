@@ -21,15 +21,15 @@
  *
  * @section EXAMPLE
  *
- *     #include <bcm2835.h>
+ *     #include <wiringPi.h>
  *     #include <tm1638.h>
  *     
  *     ...
  *     
- *     if (!bcm2835_init())
+ *     if (wiringPiSetup() == -1)
  *       { ... }
  *     
- *     tm1638_p t = tm1638_alloc(17, 21, 22);
+ *     tm1638_p t = tm1638_alloc(8, 9, 7);
  *     if (!t)
  *       { ... }
  *     
@@ -38,16 +38,16 @@
  *     while(...)
  *       {
  *         uint8_t  x = tm1638_read_8buttons(t);
- *         tm1638_set_8leds(t, 0, x);
+ *         tm1638_set_8leds(t, x);
  *       }
  *     
  *     tm1638_free(&t);
  *
  * @section DEPENDENCIES
  *
- * All of the hardware interfacing is done via Mike McCauley's
- * excellent bcm2835 library, so you'll need to install that
- * first. Get it from http://www.open.com.au/mikem/bcm2835/
+ * All of the hardware interfacing is done via WiringBP
+ * from Lemakery, so you'll need to install that
+ * first. Get it from https://github.com/LeMaker/WiringBP
  *
  * @section REFERENCES
  *

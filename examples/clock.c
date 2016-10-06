@@ -13,9 +13,9 @@
  *
  * The code hard wires pin connections:
  *
- *    * data: GPIO 17
- *    * clock: GPIO 21
- *    * strobe: GPIO 22
+ *    * data: wiringPi 8 = GPIO 2 = PIN 3
+ *    * clock: wiringPi 9 = GPIO 3 = PIN 5
+ *    * strobe: wiringPi 7 = GPIO 4 = PIN 7
  *
  * @section LICENSE
  *
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
       return -1;
   }
 
-  t = tm1638_alloc(0, 2, 3);
+  t = tm1638_alloc(8, 9, 7);
   if (!t)
     {
       printf("Unable to allocate TM1638\n");
