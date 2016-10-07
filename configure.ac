@@ -17,7 +17,7 @@ AC_CHECK_LIB([wiringPi], [wiringPiSetup], ,
  [AC_MSG_ERROR([wiringPi library not found])])
 
 # Checks for header files.
-AC_CHECK_HEADERS([stdint.h stdlib.h])
+AC_CHECK_HEADERS([stdio.h stdlib.h stdint.h stdbool.h wiringPi.h])
 
 AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
 AM_COND_IF([HAVE_DOXYGEN], [AC_CONFIG_FILES([doc/Doxyfile])])

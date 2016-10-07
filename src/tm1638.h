@@ -86,6 +86,11 @@
 #ifndef _TM1638_H_
 #define _TM1638_H_
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+
 /**
    Forward declaration of the tm1638 structure. Users of the library
    should treat this as an opaque object and all interaction with the
